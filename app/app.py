@@ -16,9 +16,14 @@ def hello_world():
     if os.getenv("LETS_GO", b"nope") == b"crea":
         return "<p>La valeur de la variable d'environnement 'LETS_GO' doit être 'crea'.<p>"
 
-    fortunes = subprocess.run("dpkg -l fortunes | grep fortunes", shell=True, text=True, capture_output=True, check=True)
-    if not re.match("^ii ", fortunes.stdout):
-        return "<p>La package APT 'fortunes' doit être installé.<p>"
+    try:
+        fortunes = subprocess.run("dpkg -l fortunes | grep fortunes", shell=True, text=True, capture_output=True, check=True)
+
+        print(fortunes.stdout)
+        if not re.match("^ii ", fortunes.stdout):
+            return "<p>2La package APT 'fortunes' doit être installé.<p>"
+    except subprocess.CalledProcessError as e:
+        return "<p>1La package APT 'fortunes' doit être installé.<p>"
 
     return "<p>Félicitations! Exercice n°4 réussi!</p>"
 
